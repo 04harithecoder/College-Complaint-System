@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="login-box">
+    <h1>Verify OTP</h1>
+    <p>Enter the OTP sent to your email</p>
+
+    {% if error %}
+      <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+    {% if success %}
+      <p style="color:green; font-size:14px;">{{ success }}</p>
+    {% endif %}
+
+    <form action="/verify-otp" method="POST">
+      <input type="hidden" name="email" value="{{ email }}">
+      <label>OTP</label>
+      <input type="text" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
+      <button type="submit" class="signin">Verify →</button>
+    </form>
+  </div>
+
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/otp.jpg') }}" alt="OTP Verification">
+  </div>
+
+</div>
+
+</body>
+</html>

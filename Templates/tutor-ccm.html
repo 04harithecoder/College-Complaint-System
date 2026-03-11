@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CCM Sessions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    .ccm-form-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      margin-bottom: 30px;
+    }
+    .ccm-status-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .ccm-status-badge.active { background:#d4edda; color:#155724; }
+    .ccm-status-badge.stopped { background:#f8d7da; color:#721c24; }
+    .subject-row {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1.5fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+    }
+    .subject-row input {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      width: 100%;
+      font-size: 13px;
+    }
+    .subject-row .roll-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .subject-row label {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 2px;
+      display: block;
+    }
+    .remove-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 18px;
+    }
+    .add-subject-btn {
+      background: white;
+      border: 2px dashed #e74c3c;
+      color: #e74c3c;
+      padding: 10px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .add-subject-btn:hover { background: #fff5f5; }
+    .start-btn {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .stop-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .download-btn {
+      background: #2980b9;
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .col-header {
+      font-size: 11px;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .responded-yes { color: #27ae60; font-weight: 700; }
+    .responded-no  { color: #e74c3c; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('tutor_dashboard') }}">Dashboard</a></li>
+      <li class="active"><a href="{{ url_for('tutor_ccm') }}">CCM Sessions</a></li>
+      <li><a href="{{ url_for('tutor_logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>CCM Sessions</h1>
+      <p>Manage Class Committee Meeting grievance collection</p>
+    </div>
+
+    {% if success %}<p style="color:green; font-weight:600; margin-bottom:15px;">✅ {{ success }}</p>{% endif %}
+    {% if error %}<p style="color:red; font-weight:600; margin-bottom:15px;">❌ {{ error }}</p>{% endif %}
+
+    <!-- Current Status -->
+    <div class="ccm-form-card">
+
+      {% if active_session %}
+        <span class="ccm-status-badge active">🟢 Status: Active — Collecting Responses</span>
+      {% else %}
+        <span class="ccm-status-badge stopped">🔴 Status: Not Started</span>
+      {% endif %}
+
+      {% if not active_session %}
+        <!-- Setup Form -->
+        <h3 style="margin-bottom:20px;">Setup New CCM Session</h3>
+        <form action="/tutor/ccm/start" method="POST" id="ccmForm">
+
+          <!-- Column Headers -->
+          <div style="display:grid; grid-template-columns:1fr 1.5fr 1.5fr 1fr 1fr auto; gap:10px; margin-bottom:8px; padding:0 15px;">
+            <span class="col-header">Subject Code</span>
+            <span class="col-header">Subject Name</span>
+            <span class="col-header">Professor Name</span>
+            <span class="col-header">Boys Roll No.</span>
+            <span class="col-header">Girls Roll No.</span>
+            <span class="col-header"></span>
+          </div>
+
+          <!-- Subject Rows -->
+          <div id="subjectRows">
+            <div class="subject-row">
+              <input type="text" name="subject_code[]"    placeholder="e.g. 20MSS21" required>
+              <input type="text" name="subject_name[]"    placeholder="e.g. Probability" required>
+              <input type="text" name="professor_name[]"  placeholder="e.g. L.Murugan" required>
+              <input type="text" name="boy_roll[]"        placeholder="Boys roll no." required>
+              <input type="text" name="girl_roll[]"       placeholder="Girls roll no." required>
+              <button type="button" class="remove-btn" onclick="removeRow(this)" style="visibility:hidden;">✕</button>
+            </div>
+          </div>
+
+          <button type="button" class="add-subject-btn" onclick="addRow()">+ Add Second Subject</button>
+
+          <div style="margin-top:25px;">
+            <button type="submit" class="start-btn">▶ Start Collecting Response</button>
+          </div>
+
+        </form>
+
+      {% else %}
+        <!-- Active Session View -->
+        <h3 style="margin-bottom:20px;">Active Session — Subject Wise Responses</h3>
+
+        <div class="complaint-table-card" style="box-shadow:none; padding:0;">
+          <table class="complaint-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Subject Code</th>
+                <th>Subject Name</th>
+                <th>Professor</th>
+                <th>Boys Member</th>
+                <th>Boys Responded</th>
+                <th>Girls Member</th>
+                <th>Girls Responded</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in active_session %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ s.subject_code }}</td>
+                <td>{{ s.subject_name }}</td>
+                <td>{{ s.professor_name }}</td>
+                <td>{{ s.boy_roll }}</td>
+                <td>
+                  {% if s.boy_responded %}
+                    <span class="responded-yes">✅ Responded</span>
+                  {% else %}
+                    <span class="responded-no">⏳ Pending</span>
+                  {% endif %}
+                </td>
+                <td>{{ s.girl_roll }}</td>
+                <td>
+                  {% if s.girl_responded %}
+                    <span class="responded-yes">✅ Responded</span>
+                  {% else %}
+                    <span class="responded-no">⏳ Pending</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:25px; display:flex; gap:15px; flex-wrap:wrap;">
+          <form action="/tutor/ccm/stop" method="POST" style="display:inline;">
+            <button type="submit" class="stop-btn">⏹ Stop Collecting</button>
+          </form>
+          <a href="/tutor/ccm/download" class="download-btn">⬇ Download All Responses (Word)</a>
+        </div>
+
+      {% endif %}
+
+    </div>
+
+    <!-- Past Sessions -->
+    {% if past_sessions %}
+    <div class="complaint-table-card">
+      <h3 style="margin-bottom:15px;">Past Sessions</h3>
+      <table class="complaint-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Professor</th>
+            <th>Date</th>
+            <th>Responses</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in past_sessions %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ s.subject_code }}</td>
+            <td>{{ s.subject_name }}</td>
+            <td>{{ s.professor_name }}</td>
+            <td>{{ s.created_at.strftime('%d-%m-%Y') }}</td>
+            <td>{{ s.response_count }} / {{ s.member_count }}</td>
+            <td><a href="/tutor/ccm/download/{{ s.session_id }}" class="download-btn" style="padding:6px 14px; font-size:13px;">⬇ Download</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<script>
+  function addRow() {
+    const rows = document.getElementById('subjectRows');
+    const div = document.createElement('div');
+    div.className = 'subject-row';
+    div.innerHTML = `
+      <input type="text" name="subject_code[]"   placeholder="e.g. 20MSS22" required>
+      <input type="text" name="subject_name[]"   placeholder="Subject Name" required>
+      <input type="text" name="professor_name[]" placeholder="Professor Name" required>
+      <input type="text" name="boy_roll[]"       placeholder="Boys roll no." required>
+      <input type="text" name="girl_roll[]"      placeholder="Girls roll no." required>
+      <button type="button" class="remove-btn" onclick="removeRow(this)">✕</button>
+    `;
+    rows.appendChild(div);
+    updateRemoveButtons();
+  }
+
+  function removeRow(btn) {
+    btn.closest('.subject-row').remove();
+    updateRemoveButtons();
+  }
+
+  function updateRemoveButtons() {
+    const rows = document.querySelectorAll('.subject-row');
+    rows.forEach((row, index) => {
+      const btn = row.querySelector('.remove-btn');
+      btn.style.visibility = rows.length > 1 ? 'visible' : 'hidden';
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Complaints</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('complaint_form') }}">Register Complaint</a></li>
+      <li class="active"><a href="{{ url_for('my_complaints') }}">My Complaints</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>My Complaints</h1>
+      <p>Track the status of your submitted complaints</p>
+    </div>
+
+    <div class="complaint-table-card">
+      <table class="complaint-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Complaint ID</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>View</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if complaints %}
+            {% for c in complaints %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>CMP{{ '%03d' % c.id }}</td>
+              <td>{{ c.category }}</td>
+              <td>
+                {% if c.status == 'Pending' %}
+                  <span class="status pending">Pending</span>
+                {% elif c.status == 'In Progress' %}
+                  <span class="status progress">In Progress</span>
+                {% elif c.status == 'Resolved' %}
+                  <span class="status resolved">Resolved</span>
+                {% else %}
+                  <span class="status rejected">{{ c.status }}</span>
+                {% endif %}
+              </td>
+              <td>{{ c.created_at.strftime('%d-%m-%Y') }}</td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" class="view-btn">👁</a>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="6" style="text-align:center; padding:20px;">
+                No complaints submitted yet!
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

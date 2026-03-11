@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li class="active"><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('admin_complaints') }}">All Complaints</a></li>
+      <li><a href="{{ url_for('admin_students') }}">All Students</a></li>
+      <li><a href="{{ url_for('admin_logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>Welcome, Admin! 👋</h1>
+      <p>Here's the overall system summary</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Students</h3>
+        <span>{{ total_students }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Total Complaints</h3>
+        <span>{{ total_complaints }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Pending</h3>
+        <span>{{ pending }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Resolved</h3>
+        <span>{{ resolved }}</span>
+      </div>
+    </div>
+
+    <!-- RECENT COMPLAINTS -->
+    <div class="complaint-table-card" style="margin-top:30px;">
+      <h3 style="margin-bottom:15px;">Recent Complaints</h3>
+      <table class="complaint-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in recent_complaints %}
+          <tr>
+            <td>CMP{{ '%03d' % c.id }}</td>
+            <td>{{ c.full_name }}</td>
+            <td>{{ c.category }}</td>
+            <td>{{ c.priority }}</td>
+            <td>
+              {% if c.status == 'Pending' %}
+                <span class="status pending">Pending</span>
+              {% elif c.status == 'Under Review' %}
+                <span class="status progress">Under Review</span>
+              {% elif c.status == 'Resolved' %}
+                <span class="status resolved">Resolved</span>
+              {% else %}
+                <span class="status rejected">{{ c.status }}</span>
+              {% endif %}
+            </td>
+            <td>{{ c.created_at.strftime('%d-%m-%Y') }}</td>
+            <td>
+              <a href="{{ url_for('admin_complaint_detail', id=c.id) }}" class="view-btn">👁</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

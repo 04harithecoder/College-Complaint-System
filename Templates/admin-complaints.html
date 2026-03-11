@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Complaints</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+      <li class="active"><a href="{{ url_for('admin_complaints') }}">All Complaints</a></li>
+      <li><a href="{{ url_for('admin_students') }}">All Students</a></li>
+      <li><a href="{{ url_for('admin_logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>All Complaints</h1>
+      <p>Manage and update complaint statuses</p>
+    </div>
+
+    <!-- Search + Filter -->
+    <form action="/admin/complaints" method="GET" style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+
+      <input type="text" name="search" value="{{ search_query }}"
+        placeholder="Search..."
+        style="padding:8px 16px; border-radius:8px; border:1px solid #ddd; flex:1; min-width:200px;">
+
+      <select name="search_by" style="padding:8px 16px; border-radius:8px; border:1px solid #ddd;">
+        <option value="full_name"  {% if search_by == 'full_name' %}selected{% endif %}>Name</option>
+        <option value="category"   {% if search_by == 'category' %}selected{% endif %}>Category</option>
+        <option value="priority"   {% if search_by == 'priority' %}selected{% endif %}>Priority</option>
+        <option value="status"     {% if search_by == 'status' %}selected{% endif %}>Status</option>
+      </select>
+
+      <select name="status" style="padding:8px 16px; border-radius:8px; border:1px solid #ddd;">
+        <option value="">All Status</option>
+        <option value="Pending"      {% if filter_status == 'Pending' %}selected{% endif %}>Pending</option>
+        <option value="Under Review" {% if filter_status == 'Under Review' %}selected{% endif %}>Under Review</option>
+        <option value="Resolved"     {% if filter_status == 'Resolved' %}selected{% endif %}>Resolved</option>
+        <option value="Rejected"     {% if filter_status == 'Rejected' %}selected{% endif %}>Rejected</option>
+      </select>
+
+      <button type="submit" class="submit-btn" style="padding:8px 20px;">Search</button>
+      <a href="/admin/complaints"><button type="button" class="cancel-btn" style="padding:8px 20px;">Reset</button></a>
+
+    </form>
+
+    <div class="complaint-table-card">
+      <table class="complaint-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if complaints %}
+            {% for c in complaints %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>CMP{{ '%03d' % c.id }}</td>
+              <td>{{ c.full_name }}</td>
+              <td>{{ c.category }}</td>
+              <td>{{ c.priority }}</td>
+              <td>
+                {% if c.status == 'Pending' %}
+                  <span class="status pending">Pending</span>
+                {% elif c.status == 'Under Review' %}
+                  <span class="status progress">Under Review</span>
+                {% elif c.status == 'Resolved' %}
+                  <span class="status resolved">Resolved</span>
+                {% else %}
+                  <span class="status rejected">{{ c.status }}</span>
+                {% endif %}
+              </td>
+              <td>{{ c.created_at.strftime('%d-%m-%Y') }}</td>
+              <td>
+                <a href="{{ url_for('admin_complaint_detail', id=c.id) }}" class="view-btn">👁</a>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align:center; padding:20px;">No complaints found!</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome Back</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- LEFT : LOGIN -->
+  <div class="login-box">
+    <h1>WELCOME BACK</h1>
+    <p>Please enter your details.</p>
+
+    <!-- Show error if login fails -->
+    {% if error %}
+      <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/login" method="POST" autocomplete="off">
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter your email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="********" required>
+
+      <div class="options">
+        <label class="remember">
+          <input type="checkbox" name="remember"> Remember me
+        </label>
+        <a href="/forgot-password">Forgot password</a>
+      </div>
+
+      <button type="submit" class="signin">Sign in</button>
+
+    </form>
+
+    <p class="signup">
+      Don't have an account?
+      <a href="/register">Sign up for free!</a>
+    </p>
+  </div>
+
+  <!-- RIGHT : IMAGE -->
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/clg.jpg') }}" alt="LOADING">
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

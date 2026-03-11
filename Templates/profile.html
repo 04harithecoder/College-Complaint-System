@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('complaint_form') }}">Register Complaint</a></li>
+      <li><a href="{{ url_for('my_complaints') }}">My Complaints</a></li>
+      <li class="active"><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>Profile</h1>
+      <p>Manage your account details</p>
+    </div>
+
+    {% if success %}
+    <p> style="color:green; font-size:14px; margin-bottom:10px;">{{ success }}</p>
+    {% endif %}
+    {% if error %}
+    <p> style="color:#b43434; font-size:14px; margin-bottom:10px;">{{ error }}</p>
+    {% endif %}
+
+    <div class="profile-wrapper">
+
+      <!-- LEFT PANEL -->
+      <div class="profile-left">
+
+        <div class="profile-photo-wrapper">
+          <div class="profile-photo">
+            <img src="{{ url_for('static', filename='assets/profile.png') }}" alt="Profile">
+          </div>
+        </div>
+
+        <!-- Change Password Form -->
+        <form action="/change-password" method="POST">
+          <div class="password-section">
+            <h3>Change Password</h3>
+            <input type="password" name="old_password" placeholder="Old Password" required>
+            <input type="password" name="new_password" placeholder="New Password" required>
+            <button type="submit" class="submit-btn">Update Password</button>
+          </div>
+        </form>
+
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="profile-right">
+
+        <h3>Profile Information</h3>
+
+        <form action="/profile" method="POST">
+          <div class="profile-grid">
+
+            <div>
+              <label>Roll Number</label>
+              <input type="text" name="roll_no" value="{{ student.roll_no }}">
+            </div>
+
+            <div>
+              <label>Full Name</label>
+              <input type="text" name="full_name" value="{{ student.full_name }}">
+            </div>
+
+            <div>
+              <label>Gender</label>
+              <select name="gender">
+                <option value="Male" {% if student.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if student.gender == 'Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Department</label>
+              <input type="text" name="department" value="{{ student.department }}">
+            </div>
+
+            <div>
+              <label>Year</label>
+              <select name="year">
+                {% for y in range(1, 6) %}
+                <option value="{{ y }}" {% if student.year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div>
+              <label>Hosteller</label>
+              <select name="is_hosteller">
+                <option value="1" {% if student.is_hosteller %}selected{% endif %}>Yes</option>
+                <option value="0" {% if not student.is_hosteller %}selected{% endif %}>No</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Email</label>
+              <input type="email" name="email" value="{{ student.email }}">
+            </div>
+
+            <div>
+              <label>Mobile Number</label>
+              <input type="text" name="mobile" value="{{ student.mobile }}">
+            </div>
+
+            <div>
+              <label>Whatsapp Number</label>
+              <input type="text" name="whatsapp" value="{{ student.whatsapp }}">
+            </div>
+
+          </div>
+
+          <div class="profile-actions">
+            <button type="submit" class="submit-btn">Save Changes</button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

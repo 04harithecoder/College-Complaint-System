@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logout</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('complaint_form') }}">Register Complaint</a></li>
+      <li><a href="{{ url_for('my_complaints') }}">My Complaints</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li class="active"><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <div class="logout-card">
+
+      <div class="warning-icon">⚠</div>
+
+      <h2>Are you sure you want to logout?</h2>
+      <p>You will be logged out from the system.</p>
+
+      <div class="logout-actions">
+        <a href="{{ url_for('logout_confirm') }}">
+          <button class="logout-yes">Yes, Logout</button>
+        </a>
+        <a href="{{ url_for('dashboard') }}">
+          <button class="logout-no">Cancel</button>
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

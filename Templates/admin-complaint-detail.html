@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Complaint Detail - Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+      <li class="active"><a href="{{ url_for('admin_complaints') }}">All Complaints</a></li>
+      <li><a href="{{ url_for('admin_students') }}">All Students</a></li>
+      <li><a href="{{ url_for('admin_logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>Complaint Details</h1>
+      <p>Complaint ID: CMP{{ '%03d' % complaint.id }}</p>
+    </div>
+
+    <!-- Update Status Form -->
+    <div class="detail-card" style="margin-bottom:20px;">
+      <h3>Update Status</h3>
+      <form action="/admin/update-status" method="POST" style="display:flex; gap:15px; align-items:center; margin-top:15px;">
+        <input type="hidden" name="complaint_id" value="{{ complaint.id }}">
+        <select name="status" style="padding:8px 16px; border-radius:8px; border:1px solid #ddd;">
+          <option value="Pending"      {% if complaint.status == 'Pending' %}selected{% endif %}>Pending</option>
+          <option value="Under Review" {% if complaint.status == 'Under Review' %}selected{% endif %}>Under Review</option>
+          <option value="Resolved"     {% if complaint.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+          <option value="Rejected"     {% if complaint.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+        </select>
+        <button type="submit" class="submit-btn">Update Status</button>
+      </form>
+      {% if success %}
+        <p style="color:green; margin-top:10px;">{{ success }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Complaint Info -->
+    <div class="detail-card">
+      <h3>Complaint Information</h3>
+      <div class="detail-grid">
+        <div>
+          <label>Student Name</label>
+          <p>{{ student.full_name }}</p>
+        </div>
+        <div>
+          <label>Roll Number</label>
+          <p>{{ student.roll_no }}</p>
+        </div>
+        <div>
+          <label>Category</label>
+          <p>{{ complaint.category }}</p>
+        </div>
+        <div>
+          <label>Date Submitted</label>
+          <p>{{ complaint.created_at.strftime('%d-%m-%Y') }}</p>
+        </div>
+        <div>
+          <label>Priority</label>
+          <p>{{ complaint.priority }}</p>
+        </div>
+        <div>
+          <label>Status</label>
+          <p>
+            {% if complaint.status == 'Pending' %}
+              <span class="status pending">Pending</span>
+            {% elif complaint.status == 'Under Review' %}
+              <span class="status progress">Under Review</span>
+            {% elif complaint.status == 'Resolved' %}
+              <span class="status resolved">Resolved</span>
+            {% else %}
+              <span class="status rejected">{{ complaint.status }}</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="description-block">
+        <label>Subject</label>
+        <p>{{ complaint.subject }}</p>
+      </div>
+
+      <div class="description-block">
+        <label>Description</label>
+        <p>{{ complaint.description }}</p>
+      </div>
+
+      <!-- Attachment Section -->
+      <div class="description-block">
+        <label>Attachment</label>
+        {% if complaint.attachment %}
+          {% set filename = complaint.attachment %}
+          {% set ext = filename.rsplit('.', 1)[-1].lower() %}
+          {% if ext in ['jpg', 'jpeg', 'png', 'gif', 'webp'] %}
+            <!-- Image Preview -->
+            <div style="margin-top:10px;">
+              <img src="{{ url_for('uploaded_file', filename=complaint.attachment) }}"
+                   alt="Attachment"
+                   style="max-width:100%; max-height:400px; border-radius:10px; border:1px solid #ddd; cursor:pointer;"
+                   onclick="window.open(this.src)" title="Click to open full image">
+              <p style="color:#888; font-size:13px; margin-top:6px;">📎 {{ complaint.attachment }} — <a href="{{ url_for('uploaded_file', filename=complaint.attachment) }}" download style="color:#e74c3c;">Download</a></p>
+            </div>
+          {% elif ext == 'pdf' %}
+            <!-- PDF -->
+            <div style="margin-top:10px;">
+              <p>📄 <a href="{{ url_for('uploaded_file', filename=complaint.attachment) }}" target="_blank" style="color:#e74c3c;">{{ complaint.attachment }} — Click to View PDF</a></p>
+            </div>
+          {% else %}
+            <!-- Other files -->
+            <div style="margin-top:10px;">
+              <p>📎 <a href="{{ url_for('static', filename='../uploads/' + complaint.attachment) }}" download style="color:#e74c3c;">{{ complaint.attachment }} — Download File</a></p>
+            </div>
+          {% endif %}
+        {% else %}
+          <p style="color:#aaa;">No attachment uploaded.</p>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

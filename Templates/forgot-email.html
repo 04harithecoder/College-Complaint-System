@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forgot Password</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="login-box">
+    <h1>Forgot Password</h1>
+    <p>Enter your registered email address</p>
+
+    {% if error %}
+      <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/forgot-password" method="POST" autocomplete="off">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button type="submit" class="signin">Send OTP →</button>
+    </form>
+
+    <p class="signup">
+      Remember password?
+      <a href="{{ url_for('login') }}">Back to login</a>
+    </p>
+  </div>
+
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/forgot.avif') }}" alt="Forgot Password">
+  </div>
+
+</div>
+
+</body>
+</html>

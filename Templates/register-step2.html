@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration – Step 2</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="login-box">
+    <h1>Create Account</h1>
+    <p>Set your login credentials</p>
+
+    <!-- Progress -->
+    <div class="steps">
+      <div class="step active">1</div>
+      <div class="line"></div>
+      <div class="step active">2</div>
+      <div class="line"></div>
+      <div class="step">3</div>
+    </div>
+
+    {% if error %}
+    <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/register-step2" method="POST" autocomplete="off">
+
+      <!-- Hidden fields carrying Step 1 data -->
+      <input type="hidden" name="full_name" value="{{ full_name }}">
+      <input type="hidden" name="roll_no" value="{{ roll_no }}">
+      <input type="hidden" name="gender" value="{{ gender }}">
+      <input type="hidden" name="department" value="{{ department }}">
+      <input type="hidden" name="degree" value="{{ degree }}">
+      <input type="hidden" name="year" value="{{ year }}">
+      <input type="hidden" name="semester" value="{{ semester }}">
+      <input type="hidden" name="is_hosteller" value="{{ is_hosteller }}">
+      <input type="hidden" name="mobile" value="{{ mobile }}">
+      <input type="hidden" name="whatsapp" value="{{ whatsapp }}">
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter college email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Create password" required>
+
+      <label>Confirm Password</label>
+      <input type="password" name="confirm_password" placeholder="Re-enter password" required>
+
+      <div style="display:flex; gap:10px;">
+        <a href="/register" class="ghost-btn">← Back</a>
+        <button type="submit" class="signin">Register →</button>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/stu.jpg') }}" alt="Illustration">
+  </div>
+
+</div>
+
+</body>
+</html>

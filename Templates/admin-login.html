@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="login-box">
+    <h1>ADMIN LOGIN</h1>
+    <p>College Complaint System</p>
+
+    {% if error %}
+      <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/admin/login" method="POST" autocomplete="off">
+
+      <label>Username</label>
+      <input type="text" name="username" placeholder="Enter admin username" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="********" required>
+
+      <button type="submit" class="signin">Login →</button>
+
+    </form>
+
+    <p class="signup">
+      Student? <a href="{{ url_for('login') }}">Go to Student Login</a>
+    </p>
+  </div>
+
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/clg.jpg') }}" alt="Admin">
+  </div>
+
+</div>
+
+</body>
+</html>

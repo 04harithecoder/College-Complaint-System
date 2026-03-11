@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register Complaint</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="form-wrapper">
+
+  <div class="complaint-card">
+
+    <h1 class="form-title">Complaint Registration Form</h1>
+
+    {% if error %}
+      <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <form action="/complaint/new" method="POST" enctype="multipart/form-data">
+
+      <div class="form-section">
+        <h2>Section 1: Complaint Details</h2>
+
+        <label>Complaint Category</label>
+        <select name="category" required>
+          <option value="">Select Category</option>
+          <option>Infrastructure</option>
+          <option>Lab Issue</option>
+          <option>Hostel</option>
+          <option>Transport</option>
+          <option>Other</option>
+        </select>
+
+        <label>Subject</label>
+        <input type="text" name="subject" placeholder="Brief subject of complaint" required>
+
+        <label>Priority</label>
+        <select name="priority" required>
+          <option value="">Select Priority</option>
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+
+      <div class="form-section">
+        <h2>Section 2: Description</h2>
+
+        <label>Complaint Description</label>
+        <textarea name="description" rows="5" placeholder="Explain your issue clearly..." required></textarea>
+
+        <label>Upload Supporting File (Optional)</label>
+        <small style="color:#777;">Allowed formats: JPG, PNG (Max 2MB)</small>
+        <input type="file" name="attachment" accept="image/*">
+      </div>
+
+      <div class="form-actions">
+        <a href="{{ url_for('dashboard') }}"><button type="button" class="cancel-btn">Cancel</button></a>
+        <button type="submit" class="submit-btn">Submit Complaint</button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+</body>
+</html>

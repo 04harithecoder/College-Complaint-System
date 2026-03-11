@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Complete</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="login-box success-box">
+    <div class="checkmark">✓</div>
+
+    <h1>Registration Successful</h1>
+    <p>Your account has been created successfully 🎉</p>
+
+    <ul class="summary">
+      <li>✔ Student details saved</li>
+      <li>✔ Account created</li>
+      <li>✔ Ready to login</li>
+    </ul>
+
+    <a href="{{ url_for('login') }}" class="signin">Go to Login →</a>
+  </div>
+
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/suc.jpg') }}" alt="Success Illustration">
+  </div>
+
+</div>
+
+</body>
+</html>

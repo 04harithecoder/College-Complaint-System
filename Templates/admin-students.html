@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Students</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('admin_complaints') }}">All Complaints</a></li>
+      <li class="active"><a href="{{ url_for('admin_students') }}">All Students</a></li>
+      <li><a href="{{ url_for('admin_logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>All Students</h1>
+      <p>List of all registered students</p>
+    </div>
+
+    <!-- Search -->
+    <form action="/admin/students" method="GET" style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+
+      <input type="text" name="search" value="{{ search_query }}"
+        placeholder="Search..."
+        style="padding:8px 16px; border-radius:8px; border:1px solid #ddd; flex:1; min-width:200px;">
+
+      <select name="search_by" style="padding:8px 16px; border-radius:8px; border:1px solid #ddd;">
+        <option value="full_name" {% if search_by == 'full_name' %}selected{% endif %}>Name</option>
+        <option value="roll_no"   {% if search_by == 'roll_no' %}selected{% endif %}>Roll Number</option>
+        <option value="email"     {% if search_by == 'email' %}selected{% endif %}>Email</option>
+        <option value="department"{% if search_by == 'department' %}selected{% endif %}>Department</option>
+        <option value="year"      {% if search_by == 'year' %}selected{% endif %}>Year</option>
+        <option value="mobile"    {% if search_by == 'mobile' %}selected{% endif %}>Mobile</option>
+      </select>
+
+      <button type="submit" class="submit-btn" style="padding:8px 20px;">Search</button>
+      <a href="/admin/students"><button type="button" class="cancel-btn" style="padding:8px 20px;">Reset</button></a>
+
+    </form>
+
+    <div class="complaint-table-card">
+      <table class="complaint-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Roll No</th>
+            <th>Department</th>
+            <th>Year</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Hosteller</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if students %}
+            {% for s in students %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ s.full_name }}</td>
+              <td>{{ s.roll_no }}</td>
+              <td>{{ s.department }}</td>
+              <td>{{ s.year }}</td>
+              <td>{{ s.email }}</td>
+              <td>{{ s.mobile }}</td>
+              <td>{{ 'Yes' if s.is_hosteller else 'No' }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="8" style="text-align:center; padding:20px;">No students found!</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

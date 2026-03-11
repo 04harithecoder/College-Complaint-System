@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Registration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- LEFT : FORM -->
+  <div class="login-box">
+
+    <h1>Student Registration</h1>
+    <p>Please fill your academic details</p>
+
+    <!-- Progress -->
+    <div class="steps">
+      <div class="step active">1</div>
+      <div class="line"></div>
+      <div class="step">2</div>
+      <div class="line"></div>
+      <div class="step">3</div>
+    </div>
+
+    {% if error %}
+      <p style="color:red; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <!-- FORM - goes to step 2 -->
+    <form action="/register" method="POST" autocomplete="off">
+
+      <label>Student Name</label>
+      <input type="text" name="full_name" placeholder="Enter your full name" required>
+
+      <label>Roll Number</label>
+      <input type="text" name="roll_no" placeholder="Eg: 22CSE045" required>
+
+      <label>Gender</label>
+      <select name="gender" required>
+        <option value="">Select Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+
+      <label>Department</label>
+      <input type="text" name="department" placeholder="Eg: CSE" required>
+
+      <label>Degree</label>
+      <select name="degree" required>
+        <option value="">Select degree</option>
+        <option>B.E</option>
+        <option>B.Tech</option>
+        <option>M.Sc</option>
+        <option>MBA</option>
+        <option>MCA</option>
+      </select>
+
+      <label>Studying Year</label>
+      <select name="year" required>
+        <option value="">Select Year</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+
+      <label>Semester</label>
+      <select name="semester" required>
+        <option value="">Select semester</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+      </select>
+
+      <label>Hosteller</label>
+      <select name="is_hosteller" required>
+        <option value="">Are you a hosteller?</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+
+      <label>Mobile Number</label>
+      <input type="text" name="mobile" placeholder="Enter mobile number" required>
+
+      <label>Whatsapp Number</label>
+      <input type="text" name="whatsapp" placeholder="Enter whatsapp number" required>
+
+      <button type="submit" class="signin">Next →</button>
+
+    </form>
+
+  </div>
+
+  <!-- RIGHT : ILLUSTRATION -->
+  <div class="image-box">
+    <img src="{{ url_for('static', filename='assets/stu.jpg') }}" alt="Student Illustration">
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

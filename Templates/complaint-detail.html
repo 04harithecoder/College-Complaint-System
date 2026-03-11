@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Complaint Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('complaint_form') }}">Register Complaint</a></li>
+      <li class="active"><a href="{{ url_for('my_complaints') }}">My Complaints</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>Complaint Details</h1>
+      <p>Complaint ID: CMP{{ '%03d' % complaint.id }}</p>
+    </div>
+
+    {% if complaint.status == 'Rejected' %}
+      <!-- Rejection Card -->
+      <div class="detail-card" style="text-align:center; padding:40px;">
+        <div style="font-size:60px;">❌</div>
+        <h2 style="color:#e74c3c; margin:15px 0;">Complaint Rejected</h2>
+        <p style="color:#777;">Your complaint has been rejected by the Admin.</p>
+        <a href="{{ url_for('complaint_form') }}">
+          <button class="submit-btn" style="margin-top:20px;">Submit New Complaint</button>
+        </a>
+      </div>
+
+    {% else %}
+      <!-- Progress Tracker -->
+      <div class="complaint-tracker-card">
+        <div class="complaint-progress-line"></div>
+        <div class="complaint-tracker-steps">
+
+          <div class="complaint-step active">
+            <div class="complaint-circle">1</div>
+            <p>Submitted</p>
+          </div>
+
+          <div class="complaint-step {% if complaint.status in ['Under Review', 'In Progress', 'Resolved'] %}active{% endif %}">
+            <div class="complaint-circle">2</div>
+            <p>Under Review</p>
+          </div>
+
+          <div class="complaint-step {% if complaint.status == 'Resolved' %}active{% endif %}">
+            <div class="complaint-circle">3</div>
+            <p>Resolved</p>
+          </div>
+
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Details -->
+    <div class="detail-card">
+      <h3>Complaint Information</h3>
+
+      <div class="detail-grid">
+        <div>
+          <label>Category</label>
+          <p>{{ complaint.category }}</p>
+        </div>
+        <div>
+          <label>Date Submitted</label>
+          <p>{{ complaint.created_at.strftime('%d-%m-%Y') }}</p>
+        </div>
+        <div>
+          <label>Priority</label>
+          <p>{{ complaint.priority }}</p>
+        </div>
+        <div>
+          <label>Status</label>
+          <p>
+            {% if complaint.status == 'Pending' %}
+              <span class="status pending">Pending</span>
+            {% elif complaint.status == 'Under Review' %}
+              <span class="status progress">Under Review</span>
+            {% elif complaint.status == 'Resolved' %}
+              <span class="status resolved">Resolved</span>
+            {% elif complaint.status == 'Rejected' %}
+              <span class="status rejected">Rejected</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <div class="description-block">
+        <label>Subject</label>
+        <p>{{ complaint.subject }}</p>
+      </div>
+
+      <div class="description-block">
+        <label>Description</label>
+        <p>{{ complaint.description }}</p>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

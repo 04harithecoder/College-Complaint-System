@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Password Updated</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="fp-wrapper">
+
+  <div class="fp-image success-img"></div>
+
+  <div class="fp-card success-card">
+    <div class="success-icon">✓</div>
+
+    <h2>Password Updated</h2>
+    <p>Your password has been changed successfully.<br>
+       You can now login with your new password.</p>
+
+    <a href="{{ url_for('login') }}" class="fp-btn">Go to Login</a>
+  </div>
+
+</div>
+
+</body>
+</html>

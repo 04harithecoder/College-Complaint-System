@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutor Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li class="active"><a href="{{ url_for('tutor_dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('tutor_ccm') }}">CCM Sessions</a></li>
+      <li><a href="{{ url_for('tutor_logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-main">
+
+    <div class="dash-header">
+      <h1>Welcome, {{ tutor.name }}!</h1>
+      <p>Tutor Dashboard — Academics Management</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+          <h3>{{ total_sessions }}</h3>
+          <p>Total Sessions</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🟢</div>
+        <div class="stat-info">
+          <h3>{{ active_sessions }}</h3>
+          <p>Active Sessions</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-info">
+          <h3>{{ total_responses }}</h3>
+          <p>Total Responses</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+          <h3>{{ pending_responses }}</h3>
+          <p>Pending Responses</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Sessions -->
+    <div class="complaint-table-card" style="margin-top:30px;">
+      <h3 style="margin-bottom:15px;">Recent CCM Sessions</h3>
+      <table class="complaint-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Professor</th>
+            <th>Status</th>
+            <th>Responses</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if recent_sessions %}
+            {% for s in recent_sessions %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ s.subject_code }}</td>
+              <td>{{ s.subject_name }}</td>
+              <td>{{ s.professor_name }}</td>
+              <td>
+                {% if s.status == 'active' %}
+                  <span class="status progress">🟢 Active</span>
+                {% else %}
+                  <span class="status rejected">🔴 Stopped</span>
+                {% endif %}
+              </td>
+              <td>{{ s.response_count }} / {{ s.member_count }}</td>
+              <td>
+                <a href="{{ url_for('tutor_session_detail', id=s.id) }}" class="view-btn">👁</a>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="7" style="text-align:center; padding:20px;">No sessions yet! Start a new CCM session.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

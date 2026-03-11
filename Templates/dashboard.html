@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="dash-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">CCS</h2>
+    <ul>
+      <li class="active"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('complaint_form') }}">Register Complaint</a></li>
+      <li><a href="{{ url_for('my_complaints') }}">My Complaints</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="dash-main">
+
+    <!-- HEADER -->
+    <div class="dash-header">
+      <h1>Welcome, {{ name }}! 👋</h1>
+      <p>Here's what's happening with your complaints</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Complaints</h3>
+        <span>{{ total }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Pending</h3>
+        <span>{{ pending }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Resolved</h3>
+        <span>{{ resolved }}</span>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions-grid">
+      <div class="action-card">
+        <h3>Register Complaint</h3>
+        <p>Submit a new issue or concern</p>
+        <a href="{{ url_for('complaint_form') }}"><button>Go</button></a>
+      </div>
+
+      <div class="action-card">
+        <h3>Check Status</h3>
+        <p>Track your submitted complaints</p>
+        <a href="{{ url_for('my_complaints') }}"><button>View</button></a>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>
